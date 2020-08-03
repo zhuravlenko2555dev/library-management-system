@@ -6,6 +6,12 @@
 
 require('./bootstrap');
 
+// AdminLTE App
+require('admin-lte');
+
+// OverlayScrollbars
+require('admin-lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')
+
 window.Vue = require('vue');
 
 /**
