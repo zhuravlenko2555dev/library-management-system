@@ -15,3 +15,7 @@ npm-debug.log
 yarn-error.log
 
 *.log
+public/css/app.css
+public/js/app.js
+public/fonts
+public/mix-manifest.json
