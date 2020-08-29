@@ -21,7 +21,7 @@ class CreateUserGroupsTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreign('group_id')
-                ->references('id')->on('roles')
+                ->references('id')->on('groups')
                 ->onUpdate('cascade');
         });
     }
