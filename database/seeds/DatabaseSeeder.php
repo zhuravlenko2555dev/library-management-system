@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
          $this->call(BorrowedAndReservedBookSeeder::class);
 
 //         $this->call(ISBNSeeder::class);
+//         $this->call(CoverImageSeeder::class);
     }
 }
