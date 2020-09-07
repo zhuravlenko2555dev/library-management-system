@@ -23,6 +23,8 @@ class CreateBookAuthorsTable extends Migration
             $table->foreign('author_id')
                 ->references('id')->on('authors')
                 ->onUpdate('cascade');
+
+            $table->unique(['book_id', 'author_id']);
         });
     }
 
