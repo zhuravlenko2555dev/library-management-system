@@ -20,5 +20,6 @@ class FromSQLSeeder extends Seeder
         DB::unprepared(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'dump' . '/book_genres.sql'));
         DB::unprepared(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'dump' . '/book_languages.sql'));
         DB::unprepared(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'dump' . '/book_publishers.sql'));
+        DB::unprepared(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'dump' . '/all_subjects_data.sql'));
     }
 }
