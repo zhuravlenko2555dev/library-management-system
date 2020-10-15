@@ -23,6 +23,8 @@ class CreateBookGenresTable extends Migration
             $table->foreign('genre_id')
                 ->references('id')->on('genres')
                 ->onUpdate('cascade');
+
+            $table->unique(['book_id', 'genre_id']);
         });
     }
 

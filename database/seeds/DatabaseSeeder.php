@@ -23,5 +23,6 @@ class DatabaseSeeder extends Seeder
 
 //         $this->call(ISBNSeeder::class);
 //         $this->call(CoverImageSeeder::class);
+//         $this->call(SubjectsSeeder::class);
     }
 }
