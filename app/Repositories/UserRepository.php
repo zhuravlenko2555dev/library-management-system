@@ -22,11 +22,11 @@ class UserRepository {
     }
 
     public function login(Request $request) {
-        $login = $request->login;
+        $username = $request->username;
         $password = $request->password;
 
-        if (Auth::attempt(['login' => $login, 'password' => $password])) {
-            $response = $this->getTokenAndRefreshToken($login, $password);
+        if (Auth::attempt(['login' => $username, 'password' => $password])) {
+            $response = $this->getTokenAndRefreshToken($username, $password);
             $data = $response["data"];
             $statusCode = $response["statusCode"];
         } else {
@@ -68,12 +68,12 @@ class UserRepository {
         return $response;
     }
 
-    public function getTokenAndRefreshToken(string $login, string $password) {
+    public function getTokenAndRefreshToken(string $username, string $password) {
         $Oclient = $this->getOClient();
         $formParams = ['grant_type' => 'password',
             'client_id' => $Oclient->id,
             'client_secret' => $Oclient->secret,
-            'username' => $login,
+            'username' => $username,
             'password' => $password,
             'scope' => '*'];
 
@@ -88,7 +88,7 @@ class UserRepository {
             $statusCode = self::SUCCUSUS_STATUS_CODE;
             $data = json_decode((string) $response->getBody(), true);
         } catch (ClientException $e) {
-            echo $e->getMessage();
+//            echo $e->getMessage();
             $statusCode = $e->getCode();
             $data = ['error' => 'OAuth client error'];
         }
