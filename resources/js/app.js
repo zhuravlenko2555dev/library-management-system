@@ -10,9 +10,53 @@ require('./bootstrap');
 require('admin-lte');
 
 // OverlayScrollbars
-require('admin-lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')
+require('admin-lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js');
 
 window.Vue = require('vue');
+
+import router from './router';
+import store from './store';
+import Application from './Application';
+
+import Dashboard from "./layouts/Dashboard";
+import Empty from "./layouts/Empty";
+
+import Notifications from 'vue-notification';
+
+Vue.component('dashboard-layout', Dashboard);
+Vue.component('empty-layout', Empty);
+
+Vue.use(Notifications);
+
+const access_token = localStorage.getItem('access_token');
+const refresh_token = localStorage.getItem('refresh_token');
+if (access_token) {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token;
+}
+axios.defaults.headers.common['Accept'] = 'application/json';
+axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
+
+axios.interceptors.response.use(
+    response => response,
+    error => {
+        // Reject promise if usual error
+        if (error.response.status !== 401 || error.response.config._retry || error.response.config.skipAuthRefresh) {
+            return Promise.reject(error);
+        }
+
+        return axios.post('/api/auth/refreshtoken', null, { headers: { Refreshtoken: refresh_token }, _retry: true })
+            .then(response => {
+                error.response.config._retry = true;
+                const access_token = response.data.access_token;
+                const refresh_token = response.data.refresh_token;
+                store.commit('auth_tokens', { access_token, refresh_token });
+                error.response.config.headers['Authorization'] = 'Bearer ' + access_token;
+
+                return axios(error.response.config);
+            }).catch(error => {
+                return Promise.reject(error);
+            })
+    });
 
 /**
  * The following block of code may be used to automatically register your
@@ -25,7 +69,7 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -34,5 +78,8 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  */
 
 const app = new Vue({
-    el: '#app',
-});
+    // el: '#app',
+    router,
+    store,
+    render: h => h(Application)
+}).$mount('#app');
