@@ -34,7 +34,7 @@ class UserGroupSeeder extends Seeder
 
         shuffle($user_count_in_group);
 
-        $current_user_id = 1;
+        $current_user_id = 7;
         for ($y = 0; $y < $group_count; $y++) {
             for ($z = 0; $z < $user_count_in_group[$y]; $z++) {
                 $val = [

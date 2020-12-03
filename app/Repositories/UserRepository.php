@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,7 +55,19 @@ class UserRepository {
     }
 
     public function user() {
-        $user = Auth::user();
+//        $user = Auth::user();
+        $user = User::query()
+            ->select(['users.*', 'roles.name as role', 'groups.name as group', 'faculties.name as faculty'])
+
+            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
+            ->join('roles', 'user_roles.role_id', '=', 'roles.id')
+
+            ->join('user_groups', 'users.id', '=', 'user_groups.user_id', 'left')
+            ->join('groups', 'user_groups.group_id', '=', 'groups.id', 'left')
+            ->join('faculties', 'groups.faculty_id', '=', 'faculties.id', 'left')
+
+            ->where('users.id', '=', Auth::user()->id)
+            ->first();
         return $this->response($user, self::SUCCUSUS_STATUS_CODE);
     }
 
