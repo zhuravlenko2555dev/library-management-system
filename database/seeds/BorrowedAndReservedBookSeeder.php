@@ -207,6 +207,7 @@ class BorrowedAndReservedBookSeeder extends Seeder
                     ->from('borrowed_books')
                     ->where('borrowed_books.status', 'like', 'reading');
             })
+            ->groupBy('users.id')
             ->select('users.id')
             ->orderByRaw('RAND()')
             ->limit(12)
