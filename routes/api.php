@@ -23,3 +23,18 @@ Route::prefix('auth')->group(function () {
         Route::post('user', 'UserController@user');
     });
 });
+Route::prefix('readers')->group(function () {
+    Route::group(['middleware' => ['auth:api']], function () {
+        Route::get('count', 'UserController@readersCount');
+        Route::get('active', 'UserController@readersActive');
+    });
+});
+Route::prefix('books')->group(function () {
+    Route::group(['middleware' => ['auth:api']], function () {
+        Route::get('count', 'BookController@count');
+        Route::get('borrowedCount', 'BookController@borrowedCount');
+        Route::get('nonReturnCount', 'BookController@nonReturnCount');
+        Route::get('borrowedGraph', 'BookController@borrowedGraph');
+        Route::get('popular', 'BookController@popular');
+    });
+});

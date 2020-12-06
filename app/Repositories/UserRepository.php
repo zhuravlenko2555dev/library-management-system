@@ -8,12 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Client as OClient;
 use GuzzleHttp\Exception\ClientException;
+use DB;
 
-class UserRepository {
-    const SUCCUSUS_STATUS_CODE = 200;
-    const UNAUTHORISED_STATUS_CODE = 401;
-    const UNAUTHORISED_STATUS_TEXT = 'Unauthorised';
-    const REFRESHTOKEN_HEADER = 'Refreshtoken';
+class UserRepository extends BaseRepository {
     private $http;
     private $BASE_URL;
 
@@ -55,7 +52,6 @@ class UserRepository {
     }
 
     public function user() {
-//        $user = Auth::user();
         $user = User::query()
             ->select(['users.*', 'roles.name as role', 'groups.name as group', 'faculties.name as faculty'])
 
@@ -76,9 +72,26 @@ class UserRepository {
         return $this->response(['message' => 'Successfully logged out'], self::SUCCUSUS_STATUS_CODE);
     }
 
-    public function response($data, int $statusCode) {
-        $response = ["data" => $data, "statusCode" => $statusCode];
-        return $response;
+    public function readersCount() {
+        $readersCount = DB::table('users')
+            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
+            ->join('roles', 'user_roles.role_id', '=', 'roles.id')
+            ->where('roles.id', '=', 3)
+            ->count();
+
+        return $this->response($readersCount, self::SUCCUSUS_STATUS_CODE);
+    }
+
+    public function readersActive() {
+        $active = User::query()
+            ->select(['users.*', DB::raw('count(borrowed_books.id) as borrowed_books')])
+            ->join('borrowed_books', 'users.id', '=', 'borrowed_books.borrower_id')
+            ->groupBy('users.id')
+            ->orderBy('borrowed_books', 'desc')
+            ->limit(10)
+            ->get();
+
+        return $this->response($active, self::SUCCUSUS_STATUS_CODE);
     }
 
     public function getTokenAndRefreshToken(string $username, string $password) {

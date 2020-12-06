@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Repositories\BookRepository;
 use Illuminate\Http\Request;
 
-class BookController extends Controller
-{
+class BookController extends Controller {
+    private $bookRepository;
+
+    public function __construct(BookRepository $bookRepository) {
+        $this->bookRepository = $bookRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -81,5 +87,32 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         //
+    }
+
+    public function count() {
+        $response = $this->bookRepository->count();
+        return response()->json($response["data"], $response["statusCode"]);
+    }
+
+    public function borrowedCount() {
+        $response = $this->bookRepository->borrowedCount();
+        return response()->json($response["data"], $response["statusCode"]);
+    }
+
+    public function nonReturnCount() {
+        $response = $this->bookRepository->nonReturnCount();
+        return response()->json($response["data"], $response["statusCode"]);
+    }
+
+    public function borrowedGraph(Request $request) {
+        $mode = $request->get('mode', BookRepository::GRAPH_MODE_MONTH);
+        $value = $request->get('value', date('m'));
+        $response = $this->bookRepository->borrowedGraph($mode, $value);
+        return response()->json($response["data"], $response["statusCode"]);
+    }
+
+    public function popular() {
+        $response = $this->bookRepository->popular();
+        return response()->json($response["data"], $response["statusCode"]);
     }
 }
