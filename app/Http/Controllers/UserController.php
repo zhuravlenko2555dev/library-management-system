@@ -7,9 +7,6 @@ use App\Http\Requests\UserLoginRequest;
 use App\Repositories\UserRepository;
 
 class UserController extends Controller {
-    const SUCCUSUS_STATUS_CODE = 200;
-    const UNAUTHORISED_STATUS_CODE = 401;
-
     private $userRepository;
 
     public function __construct(UserRepository $userRepository) {
@@ -33,6 +30,16 @@ class UserController extends Controller {
 
     public function refreshToken(Request $request) {
         $response = $this->userRepository->refreshToken($request);
+        return response()->json($response["data"], $response["statusCode"]);
+    }
+
+    public function readersCount() {
+        $response = $this->userRepository->readersCount();
+        return response()->json($response["data"], $response["statusCode"]);
+    }
+
+    public function readersActive() {
+        $response = $this->userRepository->readersActive();
         return response()->json($response["data"], $response["statusCode"]);
     }
 }

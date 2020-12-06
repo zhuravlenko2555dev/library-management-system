@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueMeta from 'vue-meta'
 import store from '../store';
+import Dashboard from '../views/Dashboard'
 import Login from '../views/Login'
 
 Vue.use(VueRouter);
@@ -12,8 +13,13 @@ let router = new VueRouter({
     routes: [
         {
             path: '/',
-            name: 'root',
-            redirect: '/dashboard'
+            name: 'dashboard',
+            component: Dashboard,
+            meta: {
+                requiresAuth: true,
+                breadcrumb: 'Dashboard',
+                headerTitle: 'Dashboard'
+            }
         },
         {
             path: '/login',
@@ -22,14 +28,6 @@ let router = new VueRouter({
             meta: {
                 layout: 'empty',
                 requiresAuth: false
-            }
-        },
-        {
-            path: '/dashboard',
-            name: 'dashboard',
-            // component: Dashboard,
-            meta: {
-                requiresAuth: true
             }
         },
     ]
@@ -47,7 +45,7 @@ router.beforeEach((to, from, next) => {
             next();
             return;
         }
-        next({ name: 'root' });
+        next({ name: 'dashboard' });
     } else {
         next();
     }

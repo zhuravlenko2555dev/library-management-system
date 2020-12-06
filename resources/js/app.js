@@ -12,21 +12,34 @@ require('admin-lte');
 // OverlayScrollbars
 require('admin-lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js');
 
+// FLOT CHARTS
+require('admin-lte/plugins/flot/jquery.flot.js');
+
 window.Vue = require('vue');
 
 import router from './router';
 import store from './store';
 import Application from './Application';
 
-import Dashboard from "./layouts/Dashboard";
+import Panel from "./layouts/Panel";
 import Empty from "./layouts/Empty";
 
 import Notifications from 'vue-notification';
+import VueBreadcrumbs from 'vue-2-breadcrumbs';
 
-Vue.component('dashboard-layout', Dashboard);
+Vue.component('panel-layout', Panel);
 Vue.component('empty-layout', Empty);
 
 Vue.use(Notifications);
+Vue.use(VueBreadcrumbs, {
+    template:
+        '<ol class="breadcrumb float-sm-right">\n' +
+        '    <li :class="{\'active\': key == $breadcrumbs.length - 1}" v-for="(crumb, key) in $breadcrumbs" v-if="crumb.meta.breadcrumb" :key="key" class="breadcrumb-item" aria-current="page">\n' +
+        '        <router-link v-if="key != ($breadcrumbs.length - 1)" :to="{ path: getPath(crumb) }">{{ getBreadcrumb(crumb.meta.breadcrumb) }}</router-link>' +
+        '        <span v-else>{{ getBreadcrumb(crumb.meta.breadcrumb) }}</span>' +
+        '    </li>\n' +
+        '</ol>\n'
+});
 
 const access_token = localStorage.getItem('access_token');
 const refresh_token = localStorage.getItem('refresh_token');

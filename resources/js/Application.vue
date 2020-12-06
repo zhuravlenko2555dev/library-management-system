@@ -13,7 +13,7 @@ export default {
     },
     computed: {
         layout() {
-            return (this.$route.meta.layout || "dashboard") + "-layout"
+            return (this.$route.meta.layout || "panel") + "-layout"
         }
     },
     created() {
