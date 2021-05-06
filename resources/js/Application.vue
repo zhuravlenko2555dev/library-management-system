@@ -18,6 +18,7 @@ export default {
     },
     created() {
         if (this.$store.getters.isLoggedIn) {
+            this.$store.dispatch('autoRefresh')
             this.$store.dispatch('user')
                 .then(() => {})
                 .catch(err => {

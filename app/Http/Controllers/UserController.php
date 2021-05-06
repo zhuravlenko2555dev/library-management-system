@@ -18,18 +18,18 @@ class UserController extends Controller {
         return response()->json($response["data"], $response["statusCode"]);
     }
 
-    public function user() {
-        $response = $this->userRepository->user();
-        return response()->json($response["data"], $response["statusCode"]);
-    }
-
-    public function logout(Request $request) {
-        $response = $this->userRepository->logout($request);
+    public function user(Request $request) {
+        $response = $this->userRepository->user($request);
         return response()->json($response["data"], $response["statusCode"]);
     }
 
     public function refreshToken(Request $request) {
         $response = $this->userRepository->refreshToken($request);
+        return response()->json($response["data"], $response["statusCode"]);
+    }
+
+    public function logout(Request $request) {
+        $response = $this->userRepository->logout($request);
         return response()->json($response["data"], $response["statusCode"]);
     }
 
