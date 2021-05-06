@@ -16,4 +16,5 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/adminlte.scss', 'public/css')
     .sass('resources/sass/app.scss', 'public/css')
     .copy('resources/img', 'public/img', false)
-    .copy('resources/favicon.svg', 'public/favicon.svg');
+    .copy('resources/favicon.svg', 'public/favicon.svg')
+    .version();
