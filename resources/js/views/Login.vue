@@ -38,6 +38,14 @@
 </template>
 
 <script>
+const { detect } = require('detect-browser');
+const browser = detect();
+
+const capitalize = (s) => {
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
 export default {
     name: "Login",
     metaInfo: {
@@ -46,14 +54,16 @@ export default {
     data() {
         return {
             username : "",
-            password : ""
+            password : "",
+            device_name : capitalize(browser.name) + ' (' + browser.version + '), ' + capitalize(browser.os)
         }
     },
     methods: {
         login: function () {
             let username = this.username
             let password = this.password
-            this.$store.dispatch('login', { username, password })
+            let device_name = this.device_name
+            this.$store.dispatch('login', { username, password, device_name })
                 .then(() => {
                     this.$store.dispatch('user')
                         .then(() => {})

@@ -42,34 +42,19 @@ Vue.use(VueBreadcrumbs, {
 });
 
 const access_token = localStorage.getItem('access_token');
-const refresh_token = localStorage.getItem('refresh_token');
 if (access_token) {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token;
 }
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
 
-axios.interceptors.response.use(
-    response => response,
-    error => {
-        // Reject promise if usual error
-        if (error.response.status !== 401 || error.response.config._retry || error.response.config.skipAuthRefresh) {
-            return Promise.reject(error);
+axios.interceptors.response.use(undefined, function (err) {
+    return new Promise(function (resolve, reject) {
+        if (err.response.status === 401 && err.response.config && !err.response.config.__isRetryRequest) {
+            this.$store.dispatch('auth_logout')
         }
-
-        return axios.post('/api/auth/refreshtoken', null, { headers: { Refreshtoken: refresh_token }, _retry: true })
-            .then(response => {
-                error.response.config._retry = true;
-                const access_token = response.data.access_token;
-                const refresh_token = response.data.refresh_token;
-                store.commit('auth_tokens', { access_token, refresh_token });
-                error.response.config.headers['Authorization'] = 'Bearer ' + access_token;
-
-                return axios(error.response.config);
-            }).catch(error => {
-                return Promise.reject(error);
-            })
     });
+});
 
 /**
  * The following block of code may be used to automatically register your

@@ -13,10 +13,11 @@ class UserLoginRequest extends FormRequest {
         return [
             'username' => 'required',
             'password' => 'required',
+            'device_name' => 'required',
         ];
     }
 
     protected function failedValidation(Validator $validator) {
-        throw new HttpResponseException(response()->json($validator->errors(), self::UNPROCESSABLE_ENTITY));
+        throw new HttpResponseException(response()->json(['errors' => $validator->errors()], self::UNPROCESSABLE_ENTITY));
     }
 }

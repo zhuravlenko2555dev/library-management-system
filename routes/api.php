@@ -16,21 +16,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', 'UserController@login');
-    Route::post('refreshtoken', 'UserController@refreshToken');
 
-    Route::group(['middleware' => ['auth:api']], function () {
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+        Route::post('refreshToken', 'UserController@refreshToken');
         Route::post('logout', 'UserController@logout');
         Route::post('user', 'UserController@user');
     });
 });
 Route::prefix('readers')->group(function () {
-    Route::group(['middleware' => ['auth:api']], function () {
+    Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('count', 'UserController@readersCount');
         Route::get('active', 'UserController@readersActive');
     });
 });
 Route::prefix('books')->group(function () {
-    Route::group(['middleware' => ['auth:api']], function () {
+    Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('count', 'BookController@count');
         Route::get('borrowedCount', 'BookController@borrowedCount');
         Route::get('nonReturnCount', 'BookController@nonReturnCount');
