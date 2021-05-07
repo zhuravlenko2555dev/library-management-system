@@ -20,7 +20,7 @@ Route::prefix('auth')->group(function () {
     Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('refreshToken', 'UserController@refreshToken');
         Route::post('logout', 'UserController@logout');
-        Route::post('user', 'UserController@user');
+        Route::get('user', 'UserController@user');
     });
 });
 Route::prefix('readers')->group(function () {

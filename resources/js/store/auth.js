@@ -41,7 +41,7 @@ export default {
                 const { refreshTask } = state
                 clearTimeout(refreshTask)
                 commit('auth_loading', true)
-                axios({ url: '/api/auth/login', data: user, method: 'POST', skipAuthRefresh: true })
+                axios({ url: '/api/auth/login', data: user, method: 'POST' })
                     .then(resp => {
                         const access_token = resp.data.access_token
                         const expires_at = (Date.now() / 1000) + resp.data.expires_in
@@ -59,7 +59,7 @@ export default {
         },
         user({ commit }) {
             return new Promise((resolve, reject) => {
-                axios({ url: '/api/auth/user', method: 'POST' })
+                axios({ url: '/api/auth/user', method: 'GET' })
                     .then(resp => {
                         const user = resp.data
 
@@ -94,7 +94,7 @@ export default {
             const { expires_at } = state
             const now = Date.now() / 1000
             let timeUntilRefresh = expires_at - now
-            timeUntilRefresh -= (1 * 60)
+            timeUntilRefresh -= (1440 * 60)
             const refreshTask = setTimeout(() => dispatch('refreshToken'), timeUntilRefresh * 1000)
             commit('refreshTask', refreshTask)
         },
@@ -103,7 +103,7 @@ export default {
                 const { refreshTask } = state
                 clearTimeout(refreshTask)
                 commit('auth_loading', true)
-                axios({ url: '/api/auth/logout', method: 'POST', skipAuthRefresh: true })
+                axios({ url: '/api/auth/logout', method: 'POST' })
                     .then(resp => {
                         commit('auth_logout')
                         resolve()
