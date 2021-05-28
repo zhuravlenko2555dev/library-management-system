@@ -28,10 +28,7 @@ class UserRepository extends BaseRepository {
 
     public function user(Request $request) {
         $user = User::query()
-            ->select(['users.*', 'roles.name as role', 'groups.name as group', 'faculties.name as faculty'])
-
-            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
-            ->join('roles', 'user_roles.role_id', '=', 'roles.id')
+            ->select(['users.*', 'groups.name as group', 'faculties.name as faculty'])
 
             ->join('user_groups', 'users.id', '=', 'user_groups.user_id', 'left')
             ->join('groups', 'user_groups.group_id', '=', 'groups.id', 'left')
@@ -59,9 +56,7 @@ class UserRepository extends BaseRepository {
 
     public function readersCount() {
         $readersCount = DB::table('users')
-            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
-            ->join('roles', 'user_roles.role_id', '=', 'roles.id')
-            ->where('roles.id', '=', 3)
+            ->where('role', '=', User::READER)
             ->count();
 
         return $this->response($readersCount, self::SUCCUSUS_STATUS_CODE);

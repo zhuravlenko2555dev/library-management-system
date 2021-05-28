@@ -16,7 +16,7 @@ class CreateNotificationsTable extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('recipient_id');
-            $table->enum('type', ['fine', 'fine_paid', 'free_book']);
+            $table->unsignedTinyInteger('type');
             $table->text('text');
             $table->boolean('is_seen')->default(false);
             $table->foreign('recipient_id')

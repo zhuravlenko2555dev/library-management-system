@@ -11,6 +11,10 @@ class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
+    const ADMIN = 1;
+    const LIBRARIAN = 2;
+    const READER = 3;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -29,7 +33,8 @@ class User extends Authenticatable
         'phone_number',
         'telegram_user_id',
         'address',
-        'photo'
+        'photo',
+        'role'
     ];
 
     /**

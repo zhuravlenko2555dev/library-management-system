@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Faker\Factory;
 
@@ -60,8 +61,7 @@ class BorrowedAndReservedBookSeeder extends Seeder
             }
 
             $readers_builder = DB::table('users')
-                ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
-                ->where('user_roles.role_id', '=', 3)
+                ->where('role', '=', User::READER)
                 ->whereNotNull('email_verified_at')
                 ->select('users.id');
             if ($index == $index_for_reading) {
@@ -198,9 +198,8 @@ class BorrowedAndReservedBookSeeder extends Seeder
         $reserved_books_data = [];
 
         $readers_for_reserved = DB::table('users')
-            ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
             ->leftJoin('borrowed_books', 'users.id', '=', 'borrowed_books.borrower_id')
-            ->where('user_roles.role_id', '=', 3)
+            ->where('role', '=', User::READER)
             ->whereNotNull('email_verified_at')
             ->whereNotIn('users.id', function (Illuminate\Database\Query\Builder $query) {
                 $query->select('borrowed_books.borrower_id')
